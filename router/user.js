@@ -10,4 +10,4 @@ login.post('/createUser', createUser);
 
 
 
-module.exports = {login} 
+module.exports = login

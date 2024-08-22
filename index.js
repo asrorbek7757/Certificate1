@@ -22,21 +22,28 @@ app.use(bodyParser.json());
 
 async function connectToDB() {
     try {
-        await connect(process.env.MONGO_URI);
+        await connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log("MongoDB is connected");
     } catch (error) {
         console.error("MongoDB is not connected", error);
     }
 }
+
 connectToDB();
 
-app.get('/', (req, res) => {
-    res.json("Hi NodeJs!");
+app.get('/someEndpoint', async (req, res) => {
+    try {
+        // Kod
+    } catch (error) {
+        console.error("Xatolik:", error);
+        res.status(500).json({ message: "Server xatosi!" });
+    }
 });
 
+
 // ----Routers--------
-const  {login}  = require('./routers/user');
-const { sertificat } = require('./routers/sertifikat');
+const  {login}  = require('./router/user');
+const { sertificat } = require('./router/sertifikat');
 
 app.use('/user', login);
 app.use('/sertifikat', sertificat);

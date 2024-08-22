@@ -9,4 +9,4 @@ sertificat.post('/createSertificat', createSertificat);
 
 
 
-module.exports = { sertificat };
+module.exports =  sertificat 
