@@ -31,18 +31,12 @@ async function connectToDB() {
 
 connectToDB();
 
-app.get('/someEndpoint', async (req, res) => {
-    try {
-        // Kod
-    } catch (error) {
-        console.error("Xatolik:", error);
-        res.status(500).json({ message: "Server xatosi!" });
-    }
+app.get('/', (req, res) => {
+    res.json("Hi NodeJs!");
 });
 
-
 // ----Routers--------
-const  login  = require('./router/user');
+const  login = require('./router/user');
 const sertificat  = require('./router/sertifikat');
 
 app.use('/user', login);
