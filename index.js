@@ -42,8 +42,8 @@ app.get('/someEndpoint', async (req, res) => {
 
 
 // ----Routers--------
-const  {login}  = require('./router/user');
-const { sertificat } = require('./router/sertifikat');
+const  login  = require('./router/user');
+const sertificat  = require('./router/sertifikat');
 
 app.use('/user', login);
 app.use('/sertifikat', sertificat);

@@ -1,5 +1,5 @@
 const User = require('../model/UserSchema');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Foydalanuvchilarni olish funksiyasi
