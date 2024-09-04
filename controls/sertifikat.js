@@ -35,7 +35,7 @@ const createSertificat = async (req, res) => {
         } = req.body;
         
         
-        const existingSertificat = await Sertificat.findOne({fname  });
+        const existingSertificat = await Sertificat.findOne({lname, userId  });
         if (existingSertificat) {
             return res.status(400).json({
                 success: false,
@@ -72,8 +72,30 @@ const createSertificat = async (req, res) => {
         });
     }
 };
+// Delete funksiyasi
+const deleteSertifikat = async (req, res)=>{
+    try {
+        let { _id } = req.params;
+        let deleted = await Sertificat.findByIdAndDelete({_id: _id });
+        if (!deleted){
+            return  res.json({
+                seccess: false,
+                message: "Sertifikat is not found!",
+                innerData: deleted
+            })
+        }
+        res.json({
+            seccess: true,
+            message: "Sertiifkat is found!",
+            innerData: deleted
+        })
 
+    }catch(error){
+        res.json({ seccess: true, message: error })
+    }
+}
 module.exports = {
     getSertificat,
     createSertificat,
+    deleteSertifikat
 };
