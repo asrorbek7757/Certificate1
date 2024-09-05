@@ -36,10 +36,10 @@ app.get('/', (req, res) => {
 });
 
 // ----Routers--------
-const  login = require('./router/user');
-const sertificat  = require('./router/sertifikat');
+const  user = require('./routes/user');
+const sertificat  = require('./routes/sertifikat');
 
-app.use('/user', login);
+app.use('/user', user);
 app.use('/sertifikat', sertificat);
 
 app.post('/upload', async (req, res) => {
