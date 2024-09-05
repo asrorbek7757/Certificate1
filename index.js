@@ -36,48 +36,46 @@ app.get('/', (req, res) => {
 });
 
 // ----Routers--------
-const  user = require('./routes/user');
+const  login = require('./routes/user');
 const sertificat  = require('./routes/sertifikat');
-const upload  = require('./routes/upload');
 
-app.use('/user', user);
+app.use('/user', login);
 app.use('/sertifikat', sertificat);
-app.use('/upload', upload);
 
-// app.post('/upload', async (req, res) => {
-//     if (!req.files || Object.keys(req.files).length === 0) {
-//         return res.status(400).send('No files were uploaded.');
-//     }
+app.post('/upload', async (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
 
-//     const file = req.files.file;
-//     const filePath = `${__dirname}/${file.name}`;
+    const file = req.files.file;
+    const filePath = `${__dirname}/${file.name}`;
 
-//     file.mv(filePath, async (err) => {
-//         if (err) {
-//             return res.status(500).send(err);
-//         }
+    file.mv(filePath, async (err) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
 
-//         try {
-//             const formData = new FormData();
-//             formData.append('document', fs.createReadStream(filePath));
+        try {
+            const formData = new FormData();
+            formData.append('document', fs.createReadStream(filePath));
 
-//             const response = await axios.post(`https://api.telegram.org/bot${token}/sendDocument`, formData, {
-//                 headers: formData.getHeaders(),
-//                 params: {
-//                     chat_id: 6039225297 // O'zingizning chat_id ni qo'shing
-//                 },
-//             });
+            const response = await axios.post(`https://api.telegram.org/bot${token}/sendDocument`, formData, {
+                headers: formData.getHeaders(),
+                params: {
+                    chat_id: 6039225297 // O'zingizning chat_id ni qo'shing
+                },
+            });
 
-//             console.log(response.data);
-//             res.send('File uploaded and sent to telegram bot successfully!');
-//         } catch (error) {
-//             console.error('Error sending file to Telegram bot:', error);
-//             res.status(500).send('Error sending file to Telegram bot.');
-//         } finally {
-//             fs.unlinkSync(filePath);
-//         }
-//     });
-// });
+            console.log(response.data);
+            res.send('File uploaded and sent to telegram bot successfully!');
+        } catch (error) {
+            console.error('Error sending file to Telegram bot:', error);
+            res.status(500).send('Error sending file to Telegram bot.');
+        } finally {
+            fs.unlinkSync(filePath);
+        }
+    });
+});
 
 // Bot ishga tushganda
 bot.onText(/\/start/, async (msg) => {
