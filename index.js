@@ -3,9 +3,9 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const axios = require('axios');
-const fs = require('fs');
-const FormData = require('form-data');
+// const axios = require('axios');
+// const fs = require('fs');
+// const FormData = require('form-data');
 const { connect } = require('mongoose');
 require('dotenv').config();
 

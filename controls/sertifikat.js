@@ -1,10 +1,8 @@
 const Sertificat = require('../model/SertifikatSchema');
-const token = process.env.TELEGRAM_TOKEN;
-const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
-const bodyParser = require('body-parser');
-const TelegramBot = require('node-telegram-bot-api');
+const axios = require('axios');
+
 // Foydalanuvchilarni olish funksiyasi
 const getSertificat = async (req, res) => {
     try {
@@ -24,22 +22,19 @@ const getSertificat = async (req, res) => {
     }
 };
 
-  
-
 // Ro'yxatdan o'tish funksiyasi
 const createSertificat = async (req, res) => {
     try {
         const {
-         fname,
-         lname,
-         date,
-         markazNomi,
-         fanNomi,
-         userId
+            fname,
+            lname,
+            date,
+            markazNomi,
+            fanNomi,
+            userId
         } = req.body;
-        
-        
-        const existingSertificat = await Sertificat.findOne({lname, userId  });
+
+        const existingSertificat = await Sertificat.findOne({ lname, userId });
         if (existingSertificat) {
             return res.status(400).json({
                 success: false,
@@ -47,22 +42,18 @@ const createSertificat = async (req, res) => {
             });
         }
 
-      
-        
-    
         const newSertificate = new Sertificat({
-       fname,
-       lname,
-       date,
-       markazNomi,
-       fanNomi,
-       userId
-
+            fname,
+            lname,
+            date,
+            markazNomi,
+            fanNomi,
+            userId
         });
 
-        // Yangi Sertificat saqlash
+        // Yangi Sertifikat saqlash
         await newSertificate.save();
-        
+
         // Muvaffaqiyatli ro'yxatdan o'tkazilganlik xabari
         return res.status(201).json({
             success: true,
@@ -76,29 +67,31 @@ const createSertificat = async (req, res) => {
         });
     }
 };
-// Delete funksiyasi
-const deleteSertifikat = async (req, res)=>{
+
+// Sertifikatni o'chirish funksiyasi
+const deleteSertifikat = async (req, res) => {
     try {
         let { _id } = req.params;
-        let deleted = await Sertificat.findByIdAndDelete({_id: _id });
-        if (!deleted){
-            return  res.json({
-                seccess: false,
-                message: "Sertifikat is not found!",
+        let deleted = await Sertificat.findByIdAndDelete({ _id: _id });
+        if (!deleted) {
+            return res.json({
+                success: false,
+                message: "Sertifikat topilmadi!",
                 innerData: deleted
-            })
+            });
         }
         res.json({
-            seccess: true,
-            message: "Sertiifkat is found!",
+            success: true,
+            message: "Sertifikat o'chirildi!",
             innerData: deleted
-        })
-
-    }catch(error){
-        res.json({ seccess: true, message: error })
+        });
+    } catch (error) {
+        res.json({ success: false, message: error });
     }
-}
-const uploadSertifikat = async (req, res) => {
+};
+
+// Fayl yuklash va Telegram botga yuborish funksiyasi
+const uploadFile = async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -115,7 +108,7 @@ const uploadSertifikat = async (req, res) => {
             const formData = new FormData();
             formData.append('document', fs.createReadStream(filePath));
 
-            const response = await axios.post(`https://api.telegram.org/bot${token}/sendDocument`, formData, {
+            const response = await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendDocument`, formData, {
                 headers: formData.getHeaders(),
                 params: {
                     chat_id: 6039225297 // O'zingizning chat_id ni qo'shing
@@ -128,13 +121,14 @@ const uploadSertifikat = async (req, res) => {
             console.error('Error sending file to Telegram bot:', error);
             res.status(500).send('Error sending file to Telegram bot.');
         } finally {
-            fs.unlinkSync(filePath);
+            fs.unlinkSync(filePath); // Faylni vaqtinchalik xotiradan o'chirish
         }
     });
-}
+};
+
 module.exports = {
     getSertificat,
     createSertificat,
     deleteSertifikat,
-    uploadSertifikat
+    uploadFile
 };
